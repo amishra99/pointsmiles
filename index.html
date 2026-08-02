@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Miles &amp; Points Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C1826; --ink-2:#11223A; --ink-3:#1A3252;
+    --paper:#EAEEF3; --paper-2:#FFFFFF;
+    --brass:#C69A4C; --brass-bright:#E4C079; --burgundy:#8A3346;
+    --teal:#3E837C;
+    --tl:#E9EEF4; --dim:#8FA4B8; --onpaper:#132338; --onpaper-dim:#5B6B7E;
+    --line:rgba(198,154,76,.28); --line-soft:rgba(255,255,255,.08);
+    --f-disp:'Bricolage Grotesque',Georgia,serif;
+    --f-body:'Inter',system-ui,-apple-system,sans-serif;
+    --f-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--f-body);background:var(--ink);color:var(--tl);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:16px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  h1,h2,h3,h4{font-family:var(--f-disp);font-weight:700;line-height:1.08;letter-spacing:-.01em}
+  a{color:var(--brass-bright)}
+  .mono{font-family:var(--f-mono)}
+  .eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--brass);font-weight:500}
+
+  /* ---------- HERO / departure board ---------- */
+  header.hero{padding:64px 0 46px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(120% 80% at 85% -10%,rgba(198,154,76,.14),transparent 60%);pointer-events:none}
+  .tag{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+  .tag .dot{width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 14px var(--brass)}
+  .hero h1{font-size:clamp(2.6rem,6.4vw,4.6rem);font-weight:800;color:#fff;max-width:14ch}
+  .hero h1 em{font-style:normal;color:var(--brass-bright)}
+  .hero .sub{margin-top:20px;max-width:56ch;color:var(--dim);font-size:1.06rem}
+  .board{margin-top:38px;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px}
+  .route{background:linear-gradient(180deg,var(--ink-2),rgba(17,34,58,.55));
+    border:1px solid var(--line-soft);border-left:3px solid var(--brass);border-radius:10px;padding:16px 18px}
+  .route .k{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+  .route .v{font-family:var(--f-disp);font-weight:700;font-size:1.28rem;color:#fff;margin-top:4px}
+  .route .v small{font-family:var(--f-body);font-weight:500;font-size:.8rem;color:var(--brass-bright);display:block;letter-spacing:0}
+  .meta-strip{margin-top:30px;display:flex;flex-wrap:wrap;gap:26px;font-family:var(--f-mono);
+    font-size:.74rem;letter-spacing:.05em;color:var(--dim)}
+  .meta-strip b{color:var(--tl);font-weight:600}
+
+  /* ---------- section scaffolding ---------- */
+  section{padding:56px 0;border-bottom:1px solid var(--line-soft)}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:30px;flex-wrap:wrap}
+  .sec-num{font-family:var(--f-mono);color:var(--brass);font-size:.8rem;font-weight:600;
+    border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+  .sec-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);color:#fff}
+  .lead{color:var(--dim);max-width:66ch;font-size:1.02rem}
+
+  /* reality checks */
+  .checks{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
+  .check{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:12px;padding:22px 22px 20px;position:relative}
+  .check h4{color:var(--brass-bright);font-size:1.06rem;margin-bottom:7px;display:flex;gap:9px;align-items:center}
+  .check p{color:var(--dim);font-size:.93rem}
+  .check .big{font-family:var(--f-mono);color:#fff;font-weight:600}
+
+  /* ---------- CALCULATOR ---------- */
+  .calc-shell{background:linear-gradient(165deg,var(--ink-2),#0e1e34);border:1px solid var(--line);
+    border-radius:18px;padding:30px;box-shadow:0 30px 70px -40px rgba(0,0,0,.8)}
+  .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px}
+  .field label{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .field input,.field select{width:100%;background:var(--ink);border:1px solid rgba(255,255,255,.12);
+    color:#fff;border-radius:9px;padding:13px 14px;font-family:var(--f-mono);font-size:1rem;outline:none}
+  .field input:focus,.field select:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(198,154,76,.15)}
+  .field.amount input{font-size:1.5rem;font-weight:600;color:var(--brass-bright)}
+  .adv{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+  .adv summary{cursor:pointer;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--brass);list-style:none}
+  .adv summary::-webkit-details-marker{display:none}
+  .adv summary::before{content:"+ ";color:var(--brass)}
+  .adv[open] summary::before{content:"– "}
+  .adv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+  .toggle{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--dim)}
+  .toggle input{width:auto}
+  .hint{font-size:.74rem;color:var(--onpaper-dim);margin-top:6px;font-family:var(--f-body)}
+  .switch-row{grid-column:1/-1;display:flex;gap:14px;flex-wrap:wrap;margin-top:2px}
+  .switch{flex:1;min-width:250px;display:flex;align-items:center;gap:11px;background:var(--ink);
+    border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;cursor:pointer;
+    font-size:.86rem;color:var(--dim);line-height:1.35}
+  .switch:hover{border-color:var(--line)}
+  .switch input{width:18px;height:18px;accent-color:var(--brass);flex:none}
+  .switch span em{font-style:normal;color:var(--onpaper-dim);display:block;font-size:.72rem;font-family:var(--f-mono);margin-top:2px}
+  .switch input:checked ~ span{color:var(--tl)}
+
+  /* boarding-pass results */
+  .results{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(188px,1fr));gap:14px}
+  .pass{background:var(--paper-2);color:var(--onpaper);border-radius:12px;overflow:hidden;position:relative;
+    border:1px solid rgba(0,0,0,.06);display:flex;flex-direction:column}
+  .pass .top{padding:14px 15px 12px;border-bottom:1px dashed rgba(0,0,0,.18);position:relative}
+  .pass .top::before,.pass .top::after{content:"";position:absolute;bottom:-7px;width:13px;height:13px;
+    border-radius:50%;background:var(--ink-2)}
+  .pass .top::before{left:-7px}.pass .top::after{right:-7px}
+  .pass .name{font-family:var(--f-disp);font-weight:700;font-size:.98rem;line-height:1.1}
+  .pass .cur{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;color:var(--onpaper-dim);
+    text-transform:uppercase;margin-top:3px}
+  .pass .body{padding:13px 15px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .pass .rowk{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .pass .rowk .lab{font-size:.7rem;color:var(--onpaper-dim);text-transform:uppercase;letter-spacing:.06em}
+  .pass .rowk .num{font-family:var(--f-mono);font-weight:600;font-size:1.02rem}
+  .pass .val{margin-top:auto;padding-top:10px;border-top:1px solid rgba(0,0,0,.08)}
+  .pass .val .big{font-family:var(--f-disp);font-weight:800;font-size:1.5rem;color:var(--burgundy)}
+  .pass .val .lab{font-size:.66rem;color:var(--onpaper-dim);text-transform:uppercase;letter-spacing:.08em}
+  .pass .part{font-size:.76rem;color:var(--onpaper-dim)}
+  .pass .part b{color:var(--onpaper);font-family:var(--f-mono)}
+  .pass.win{outline:2.5px solid var(--brass);outline-offset:0;box-shadow:0 18px 40px -22px rgba(198,154,76,.7)}
+  .pass.win .stamp{position:absolute;top:11px;right:11px;background:var(--brass);color:#1a1204;
+    font-family:var(--f-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;padding:3px 7px;
+    border-radius:4px;transform:rotate(4deg)}
+  .pass.dead{opacity:.62}
+  .pass.dead .val .big{color:var(--onpaper-dim);font-size:1.05rem}
+  .calc-note{margin-top:18px;font-size:.86rem;color:var(--dim);background:rgba(198,154,76,.07);
+    border:1px solid var(--line-soft);border-radius:10px;padding:13px 16px}
+  .calc-note b{color:var(--brass-bright)}
+
+  /* card profiles */
+  .cards-list{display:grid;gap:14px;margin-top:6px}
+  .cardp{display:grid;grid-template-columns:200px 1fr;gap:0;background:var(--ink-2);
+    border:1px solid var(--line-soft);border-radius:14px;overflow:hidden}
+  .cardp .face{padding:22px;background:linear-gradient(150deg,var(--ink-3),var(--ink-2));
+    border-right:1px solid var(--line-soft);display:flex;flex-direction:column;justify-content:space-between}
+  .cardp .face .role{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+  .cardp .face h3{color:#fff;font-size:1.24rem;margin-top:10px}
+  .cardp .face .fee{font-family:var(--f-mono);font-size:.78rem;color:var(--dim);margin-top:12px}
+  .cardp .info{padding:20px 22px}
+  .cardp .info .earn{font-family:var(--f-mono);font-size:.9rem;color:var(--tl);margin-bottom:10px}
+  .cardp .info .earn b{color:var(--brass-bright)}
+  .cardp .info p{font-size:.9rem;color:var(--dim)}
+  .cardp .info .excl{margin-top:10px;font-size:.8rem;color:var(--onpaper-dim)}
+  .cardp .info .excl b{color:var(--burgundy);font-family:var(--f-body)}
+  .badge{display:inline-block;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;
+    padding:2px 8px;border-radius:20px;border:1px solid var(--line);color:var(--brass-bright);margin-right:6px;margin-top:8px}
+
+  /* allocation table */
+  .tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:.92rem}
+  .tbl th{text-align:left;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--brass);padding:10px 12px;border-bottom:1px solid var(--line)}
+  .tbl td{padding:12px;border-bottom:1px solid var(--line-soft);color:var(--dim);vertical-align:top}
+  .tbl td:first-child{color:var(--tl);font-weight:500}
+  .tbl .pick{font-family:var(--f-mono);color:var(--brass-bright);font-weight:600}
+  .tbl .alt{color:var(--dim)}
+  .tbl tr:hover td{background:rgba(198,154,76,.04)}
+
+  /* crossover chart */
+  .chart-wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:26px;align-items:center;margin-top:8px}
+  .chart-card{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:14px;padding:22px}
+  .legend{display:flex;gap:18px;margin-top:12px;font-family:var(--f-mono);font-size:.76rem}
+  .legend span{display:flex;align-items:center;gap:7px;color:var(--dim)}
+  .legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+  .rule{background:var(--ink-2);border:1px solid var(--line);border-left:3px solid var(--brass);
+    border-radius:12px;padding:20px 22px}
+  .rule .r{font-family:var(--f-disp);font-weight:700;font-size:1.15rem;color:#fff;margin-bottom:6px}
+  .rule p{font-size:.9rem;color:var(--dim)}
+  .rule .cross{font-family:var(--f-mono);color:var(--brass-bright);font-weight:600}
+
+  /* milestone / list blocks */
+  .stack{display:grid;gap:14px;margin-top:6px}
+  .mile{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:12px;padding:18px 20px;
+    display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+  .mile .p{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;color:var(--brass);
+    border:1px solid var(--line);border-radius:6px;padding:5px 9px;white-space:nowrap;text-align:center}
+  .mile h4{color:#fff;font-size:1.02rem;margin-bottom:4px}
+  .mile p{font-size:.9rem;color:var(--dim)}
+  .mile .win-val{color:var(--brass-bright);font-family:var(--f-mono);font-size:.84rem}
+
+  .callout{background:linear-gradient(150deg,rgba(138,51,70,.22),rgba(17,34,58,.4));
+    border:1px solid rgba(138,51,70,.5);border-radius:14px;padding:24px 26px;margin-top:8px}
+  .callout h3{color:#fff;font-size:1.2rem;margin-bottom:8px}
+  .callout p{color:var(--dim);font-size:.94rem}
+  .callout b{color:var(--brass-bright)}
+
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+  .vbox{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:12px;padding:20px}
+  .vbox h4{color:var(--brass-bright);font-size:1rem;margin-bottom:8px}
+  .vbox p{font-size:.88rem;color:var(--dim)}
+  .vbox .no{color:var(--burgundy);font-weight:600}
+  .vbox .yes{color:var(--teal);font-weight:600}
+
+  .watch{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:6px}
+  .watch li{list-style:none;background:var(--ink-2);border:1px solid var(--line-soft);border-radius:10px;
+    padding:14px 16px;font-size:.88rem;color:var(--dim)}
+  .watch li b{color:var(--tl)}
+
+  footer{padding:40px 0 60px;color:var(--onpaper-dim);font-size:.8rem;font-family:var(--f-mono)}
+  footer b{color:var(--dim)}
+
+  @media(max-width:820px){
+    .board,.checks,.calc-grid,.chart-wrap,.verdict,.watch,.adv-grid{grid-template-columns:1fr}
+    .adv-grid{grid-template-columns:1fr 1fr}
+    .cardp{grid-template-columns:1fr}
+    .cardp .face{border-right:none;border-bottom:1px solid var(--line-soft)}
+  }
+  @media print{
+    body{background:#fff;color:#12233A;font-size:11.5px}
+    .wrap{max-width:100%;padding:0 14px}
+    header.hero,section{border-color:#ddd;padding:22px 0;break-inside:avoid}
+    .hero h1{color:#0C1826}.hero h1 em{color:var(--burgundy)}
+    .sec-head h2,.route .v,.cardp .face h3,.mile h4,.callout h3,.rule .r,.pass .name{color:#0C1826}
+    .route,.check,.cardp,.calc-shell,.chart-card,.mile,.rule,.callout,.vbox,.watch li,.result,.pass{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .adv{display:none}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="tag"><span class="dot"></span><span class="eyebrow">Household Rewards System · 2026 edition</span></div>
+    <h1>The Miles &amp; <em>Points</em> Playbook</h1>
+    <p class="sub">One system for two people and five premium cards — engineered to turn everyday spend into premium-cabin seats and hotel nights, and to never waste a rupee on a category that earns nothing.</p>
+
+    <div class="board">
+      <div class="route">
+        <div class="k">Airline engine</div>
+        <div class="v">Axis <small>Atlas + Magnus → Flying Blue / KrisFlyer</small></div>
+      </div>
+      <div class="route">
+        <div class="k">Hotel engine</div>
+        <div class="v">HSBC + Amex <small>→ Accor / Marriott Bonvoy (1:1)</small></div>
+      </div>
+    </div>
+
+    <div class="meta-strip">
+      <span>Redeem for: <b>airline miles + hotel points</b></span>
+      <span>Loyalty: <b>Flying Blue · Marriott Bonvoy</b></span>
+      <span>Reward-eligible spend: <b>~₹10–11L / yr</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- 1 · REALITY CHECKS -->
+<section id="reality">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Four things to accept first</h2></div>
+    <p class="lead">These four facts shape everything else. Getting them right matters more than squeezing points out of any single category.</p>
+    <div class="checks">
+      <div class="check">
+        <h4>SIPs can't be carded</h4>
+        <p>Your <span class="big">₹80,000/mo</span> mutual-fund SIPs debit the bank via mandate — not a card transaction. ~40% of monthly spend is simply out of scope. Same for maids &amp; domestic help.</p>
+      </div>
+      <div class="check">
+        <h4>Rent earns on exactly one card</h4>
+        <p>Rent is excluded everywhere <em>except Magnus</em>, which earns up to <span class="big">₹50,000/mo</span> of rent (and it counts toward Magnus's ₹1.5L threshold). A ~1% + GST surcharge applies.</p>
+      </div>
+      <div class="check">
+        <h4>Fuel &amp; utilities earn nothing</h4>
+        <p>Fuel, electricity, gas, WiFi and insurance are excluded on all five cards. Routing them via Amazon Pay doesn't change the category code. Treat as zero-reward.</p>
+      </div>
+      <div class="check">
+        <h4>The real battlefield is ~₹10–11L</h4>
+        <p>Shopping <span class="big">₹50k</span>, dining <span class="big">₹20k</span>, groceries <span class="big">₹10k</span> and travel are the only reward-earning spend. That's the pool this whole system optimises.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · CALCULATOR -->
+<section id="calc">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Before-you-buy calculator</h2></div>
+    <p class="lead">Enter an amount and category. It shows what each card earns, what that becomes after transfer to your airline/hotel partners, and stamps the best-value card. Tune the two valuation knobs to your own redemption style.</p>
+
+    <div class="calc-shell">
+      <div class="calc-grid">
+        <div class="field amount">
+          <label for="amt">Spend amount (₹)</label>
+          <input id="amt" type="number" min="0" step="500" value="50000" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="cat">Category</label>
+          <select id="cat">
+            <option value="shopping">Online shopping / general retail</option>
+            <option value="groceries">Groceries (Blinkit / Zepto / q-commerce)</option>
+            <option value="dining">Dining &amp; food delivery</option>
+            <option value="travel_flights">Travel — flights / aggregators / forex</option>
+            <option value="travel_hotels">Travel — hotels</option>
+            <option value="rent">Rent</option>
+            <option value="fuel">Fuel</option>
+            <option value="utilities">Utilities / insurance</option>
+          </select>
+        </div>
+        <div class="switch-row">
+          <label class="switch"><input id="portal" type="checkbox"><span>Booked via bank travel portal<em>Axis Travel EDGE / HSBC Travel with Points</em></span></label>
+          <label class="switch"><input id="magaccel" type="checkbox"><span>Magnus already past ₹1.5L this month<em>turns on accelerated 35 pts / ₹200</em></span></label>
+        </div>
+      </div>
+
+      <details class="adv">
+        <summary>Assumptions &amp; Magnus context</summary>
+        <div class="adv-grid">
+          <div class="field"><label for="vair">Airline mile (₹)</label><input id="vair" type="number" min="0" step="0.05" value="0.80"></div>
+          <div class="field"><label for="vhot">Marriott point (₹)</label><input id="vhot" type="number" min="0" step="0.05" value="0.60"></div>
+          <div class="field"><label for="vacc">Accor point (₹)</label><input id="vacc" type="number" min="0" step="0.05" value="1.80"></div>
+          <div class="field"><label for="hsbcexit">HSBC points →</label>
+            <select id="hsbcexit">
+              <option value="best">Best value (auto)</option>
+              <option value="accor">Accor (1:1)</option>
+              <option value="marriott">Marriott Bonvoy (1:1)</option>
+              <option value="airline">Flying Blue / airline (1:1)</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:span 3;display:flex;align-items:flex-end"><label class="toggle"><input id="burg" type="checkbox"> Apply Burgundy transfer ratio (Magnus 5:4)</label></div>
+        </div>
+        <p class="hint">Each card's points are one currency — a point earned on shopping is worth the same as one earned on a hotel; only the <em>earn rate</em> changes by category. HSBC points transfer 1:1 to <b>Accor</b>, <b>Marriott Bonvoy</b>, or <b>Flying Blue</b> — use the <b>HSBC points →</b> selector to pick your exit (or leave it on <em>Best value</em> to auto-pick the highest). Accor's ~₹1.80/pt needs a free Accor ALL account; if you won't use it, choose Marriott or Flying Blue. Magnus: leave the ₹1.5L switch off and a big purchase still crosses into the accelerated rate on its own; turn it on once you're already past ₹1.5L.</p>
+      </details>
+
+      <div class="results" id="results"></div>
+      <div class="calc-note" id="note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · CARD PROFILES -->
+<section id="cards">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>The five cards, by role</h2></div>
+    <div class="cards-list">
+
+      <div class="cardp">
+        <div class="face">
+          <div><div class="role">Airline · everyday</div><h3>Axis Atlas</h3></div>
+          <div class="fee">₹5,000 + GST · EDGE Miles</div>
+        </div>
+        <div class="info">
+          <div class="earn"><b>5</b> miles/₹100 travel · <b>2</b>/₹100 general → transfer <b>1:2</b> to airlines</div>
+          <p>Best everyday earner at your spend level (4 partner miles/₹100). Book all direct travel here — 10% back in miles. Still your simplest route into Flying Blue &amp; KrisFlyer after the April 2026 cuts.</p>
+          <div class="excl"><b>Excludes:</b> rent, fuel, insurance, utilities, wallet, government, gold, telecom.</div>
+          <span class="badge">Milestones ₹7.5L / ₹15L</span><span class="badge">150k miles/yr transfer cap</span>
+        </div>
+      </div>
+
+      <div class="cardp">
+        <div class="face">
+          <div><div class="role">Airline · big months + rent</div><h3>Axis Magnus</h3></div>
+          <div class="fee">Lifetime free · EDGE Reward Points</div>
+        </div>
+        <div class="info">
+          <div class="earn"><b>12</b> pts/₹200 base · <b>35</b> pts/₹200 above ₹1.5L/mo → transfer <b>5:2</b></div>
+          <p>Wins only when a single month's eligible spend on it clears ~₹2.3L (see §5). Your home for rent (the one card that earns it) and for concentrated big-ticket months. Travel EDGE portal pays a strong 60 pts/₹200.</p>
+          <div class="excl"><b>Excludes:</b> wallet, government, utility, telecom, insurance, fuel, gold. Rent earns, capped ₹50k/mo.</div>
+          <span class="badge">Burgundy 5:4 flips the math</span>
+        </div>
+      </div>
+
+      <div class="cardp">
+        <div class="face">
+          <div><div class="role">Hotel + milestones</div><h3>Amex Platinum Travel</h3></div>
+          <div class="fee">₹5,000 + GST · +1 supp · MR points</div>
+        </div>
+        <div class="info">
+          <div class="earn"><b>2</b> MR/₹100 → Marriott <b>1:1</b> · airlines <b>2:1</b></div>
+          <p>Your milestone machine and best Marriott route. Feed shopping + dining here to hit ₹4L (17,500 MR), stretch to ₹7L (+22,500 MR + ₹10k Taj). Both cards share one milestone.</p>
+          <div class="excl"><b>Not accepted:</b> rent platforms, wallet loads, many small merchants. <b>Excludes:</b> fuel, insurance, utilities.</div>
+          <span class="badge">Milestones ₹1.9L / ₹4L / ₹7L</span>
+        </div>
+      </div>
+
+      <div class="cardp">
+        <div class="face">
+          <div><div class="role">Hotel · spouse anchor</div><h3>HSBC TravelOne</h3></div>
+          <div class="fee">₹4,999 + GST · Reward Points</div>
+        </div>
+        <div class="info">
+          <div class="earn"><b>4</b> pts/₹100 travel/forex · <b>2</b>/₹100 general → transfer <b>1:1</b></div>
+          <p>The only Indian card with 1:1 Accor left, plus Marriott &amp; IHG. Route utilities + spouse's everyday spend here — they count toward the ₹8L fee-waiver even when they earn nothing. Building block toward HSBC Premier.</p>
+          <div class="excl"><b>Excludes (earning):</b> fuel, rent, utilities, insurance. <b>Never</b> use abroad — 3.5% forex.</div>
+          <span class="badge">Portal hotels 24 pts/₹100 → Accor</span><span class="badge">₹8L waiver · ₹12L → 10k bonus</span>
+        </div>
+      </div>
+
+      <div class="cardp">
+        <div class="face">
+          <div><div class="role">Hold for the free night</div><h3>HDFC Marriott Bonvoy</h3></div>
+          <div class="fee">₹3,000 + GST · Bonvoy points</div>
+        </div>
+        <div class="info">
+          <div class="earn"><b>Free Night Award</b> yearly (up to 15k Bonvoy ≈ ₹15–25k) + Silver status</div>
+          <p>Keep purely for the annual FNA and Silver Elite. Don't spend on it — the base rate is poor and its ₹6L milestone is out of reach once rent goes to Magnus.</p>
+          <div class="excl"><b>Excludes:</b> rent, fuel, wallet, government, EMI, vouchers.</div>
+          <span class="badge">Diners Club — patchy acceptance</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4 · ALLOCATION -->
+<section id="allocation">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Where each rupee goes</h2></div>
+    <p class="lead">Both Axis cards stay on the table for you to choose per purchase — the calculator settles ties. Everything below is the default, with the honest alternative alongside.</p>
+    <table class="tbl">
+      <thead><tr><th>Category</th><th>Monthly</th><th>Default card</th><th>Alternative / note</th></tr></thead>
+      <tbody>
+        <tr><td>Travel — direct</td><td class="mono">2–3×/yr</td><td class="pick">Atlas · 10% miles</td><td class="alt">Magnus via Travel EDGE portal (12%) if portal pricing is competitive</td></tr>
+        <tr><td>Online shopping</td><td class="mono">₹50,000</td><td class="pick">Amex → ₹4L/₹7L milestone</td><td class="alt">Atlas (4% miles) wherever Amex is declined</td></tr>
+        <tr><td>Dining / food delivery</td><td class="mono">₹20,000</td><td class="pick">Amex (milestone fuel)</td><td class="alt">Atlas fallback; HDFC only if chasing an FNA</td></tr>
+        <tr><td>Groceries (q-commerce)</td><td class="mono">₹10,000</td><td class="pick">Atlas · 4% miles</td><td class="alt">Amex if you still need milestone progress</td></tr>
+        <tr><td>Rent</td><td class="mono">₹60,000</td><td class="pick">Magnus (only card that earns)</td><td class="alt">All ₹60k on one card; only ₹50k earns; skip if you value miles &lt; ₹0.59</td></tr>
+        <tr><td>Big-ticket month (₹2.3L+)</td><td class="mono">occasional</td><td class="pick">Magnus · accelerated</td><td class="alt">Concentrate into one statement cycle — see §5</td></tr>
+        <tr><td>Utilities</td><td class="mono">₹7,000</td><td class="pick">HSBC (waiver credit)</td><td class="alt">0 rewards anywhere; just helps the ₹8L waiver</td></tr>
+        <tr><td>Everyday / spouse</td><td class="mono">varies</td><td class="pick">HSBC · 1:1 hotels</td><td class="alt">Builds toward HSBC Premier relationship</td></tr>
+        <tr><td>Fuel (Shell)</td><td class="mono">₹10,000</td><td class="alt">any (surcharge waiver only)</td><td class="alt">See §7 — no card here earns it</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 5 · CROSSOVER -->
+<section id="crossover">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Atlas vs Magnus: the ₹2.3L line</h2></div>
+    <p class="lead">Magnus only beats Atlas once a single month's eligible spend on it clears the accelerated threshold. Below that, Atlas's cleaner ratio wins. Here's exactly where they cross, in partner miles landed.</p>
+    <div class="chart-wrap">
+      <div class="chart-card">
+        <svg viewBox="0 0 460 300" width="100%" role="img" aria-label="Crossover chart of partner miles vs single-month spend">
+          <!-- axes -->
+          <line x1="50" y1="250" x2="440" y2="250" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+          <line x1="50" y1="30" x2="50" y2="250" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+          <!-- gridlines x: 0,1.5,2.3,3,4,5L mapped 50..440 (0..500000) -->
+          <!-- scale: x = 50 + spend/500000*390 ; y = 250 - miles/30000*220 -->
+          <!-- Atlas polyline: (0,0)(150000,6000)(300000,12000)(500000,20000) -->
+          <polyline fill="none" stroke="#9FB8CF" stroke-width="2.5"
+            points="50,250 167,206 284,162 440,103.3"/>
+          <!-- Magnus polyline: (0,0)(150000,3600)(230000,9200)(300000,14100)(400000,21100)(500000,28100) -->
+          <polyline fill="none" stroke="#E4C079" stroke-width="2.5"
+            points="50,250 167,223.6 229.4,182.5 284,146.6 362,95.3 440,43.9"/>
+          <!-- threshold line at 1.5L -->
+          <line x1="167" y1="30" x2="167" y2="250" stroke="rgba(255,255,255,.14)" stroke-dasharray="4 4"/>
+          <text x="171" y="44" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="10">₹1.5L accel starts</text>
+          <!-- crossover marker at 2.3L,9200 => x=229.4 y=182.5 -->
+          <circle cx="229.4" cy="182.5" r="5" fill="#C69A4C" stroke="#0C1826" stroke-width="2"/>
+          <text x="236" y="178" fill="#E4C079" font-family="IBM Plex Mono" font-size="11" font-weight="600">₹2.30L</text>
+          <text x="236" y="191" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9">crossover</text>
+          <!-- axis labels -->
+          <text x="46" y="255" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" text-anchor="end">0</text>
+          <text x="167" y="266" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">1.5L</text>
+          <text x="284" y="266" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">3L</text>
+          <text x="440" y="266" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">5L</text>
+          <text x="245" y="286" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">single-month spend on the card →</text>
+          <text x="20" y="140" fill="#8FA4B8" font-family="IBM Plex Mono" font-size="9" transform="rotate(-90 20 140)" text-anchor="middle">partner miles →</text>
+        </svg>
+        <div class="legend">
+          <span><i style="background:#9FB8CF"></i> Atlas (1:2)</span>
+          <span><i style="background:#E4C079"></i> Magnus (5:2)</span>
+        </div>
+      </div>
+      <div>
+        <div class="rule">
+          <div class="r">Below <span class="cross">₹2.3L</span> → Atlas.<br>Above → Magnus.</div>
+          <p>At ₹3L in one month: Magnus <b style="color:#E4C079">14,100</b> vs Atlas <b style="color:#9FB8CF">12,000</b> partner miles. At ₹5L: Magnus ~28,100 vs Atlas ~20,000.</p>
+        </div>
+        <div class="callout" style="margin-top:14px">
+          <h3>Massive-month playbook</h3>
+          <p>Expecting a furniture / home-setup blowout? <b>Concentrate it into one statement cycle</b> on Magnus, and let your <b>₹50k rent ride the same month first</b> — rent fills the low 12/200 bucket, pushing more of the big spend into the 35/200 rate (that ₹3L then earns ~16,400 miles instead of 14,100). Split it across two months and the acceleration never triggers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · MILESTONES + REDEMPTION -->
+<section id="milestones">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Milestones &amp; how to burn</h2></div>
+    <p class="lead">Milestones are where the outsized value hides. Priority order, by return-per-rupee:</p>
+    <div class="stack">
+      <div class="mile"><span class="p">PRIORITY 1</span><div><h4>Amex → ₹4L, stretch ₹7L</h4><p>₹4L unlocks 17,500 bonus MR; ₹7L adds 22,500 MR + a ₹10k Taj voucher. <span class="win-val">≈ 54,000 MR + Taj at ₹7L</span> — route both shopping and dining here.</p></div></div>
+      <div class="mile"><span class="p">PRIORITY 2</span><div><h4>Atlas → ₹7.5L</h4><p>5,000 bonus miles, and keeps your everyday earning consolidated. <span class="win-val">Reachable via travel + groceries + Amex overflow.</span></p></div></div>
+      <div class="mile"><span class="p">PRIORITY 3</span><div><h4>HSBC → ₹8L fee waiver</h4><p>Utilities + spouse spend + rent (if you route it here instead) all count. <span class="win-val">Saves ₹5,898; ₹12L adds 10,000 pts.</span></p></div></div>
+      <div class="mile"><span class="p">HOLD</span><div><h4>HDFC → annual Free Night Award</h4><p>Just pay the ₹3,000 and take the FNA. <span class="win-val">One night worth ₹15–25k for ₹3k.</span></p></div></div>
+    </div>
+
+    <div style="margin-top:26px" class="verdict">
+      <div class="vbox"><h4>Airline miles</h4><p>Atlas <b class="yes">1:2</b> and Amex <b class="yes">2:1</b> both feed Flying Blue &amp; KrisFlyer — the same programs, so pool toward one premium-cabin award. Transfer only when you've found the seat; miles devalue and transfers are one-way.</p></div>
+      <div class="vbox"><h4>Hotel points</h4><p>Amex → Marriott <b class="yes">1:1</b> is your best hotel exit. HSBC → Accor <b class="yes">1:1</b> is the only one left in India and often the highest ₹/point. Watch for periodic 20–40% Amex transfer bonuses and time big moves to them.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · FUEL -->
+<section id="fuel">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><h2>The fuel verdict</h2></div>
+    <div class="verdict">
+      <div class="vbox">
+        <h4>Why it's hard</h4>
+        <p>All five of your cards <span class="no">exclude fuel</span>, and <b>Shell has no co-branded card in India</b> — the 5–8% fuel cards are locked to their own IOCL / BPCL / HPCL pumps. The CRED Shell vouchers you spotted (₹500 each, 3/day) are more hassle than the ~₹45/day they'd save. Skip them.</p>
+      </div>
+      <div class="vbox">
+        <h4>The one clean fix</h4>
+        <p>If ₹1.2L/yr of fuel is worth acting on, a <b>brand-agnostic flat-cashback card</b> (e.g. Kotak Cashback+, ~3% at <span class="yes">any</span> pump including Shell) is the only reliable route — worth ~₹3,600/yr. Otherwise, use any card purely for the 1% surcharge waiver and treat fuel as a zero-reward category.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · WATCH-OUTS -->
+<section id="watch">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Standing watch-outs</h2></div>
+    <ul class="watch">
+      <li><b>Devaluation is fast.</b> Axis cut three partners overnight in April 2026. Earn-and-burn beats hoarding.</li>
+      <li><b>Forex:</b> use Atlas abroad (~2%). Never Amex or HSBC TravelOne — both 3.5%.</li>
+      <li><b>Acceptance:</b> keep Atlas/HSBC (Visa/MC) as backup; Amex and Diners get declined often.</li>
+      <li><b>Milestone clocks differ:</b> Amex runs on card-membership anniversary; HSBC/HDFC on their own year. Track each separately.</li>
+      <li><b>Magnus caps:</b> accelerated earn is limited to credit limit + ₹1.5L/month; rent earning capped at ₹50k/month.</li>
+      <li><b>Verify before committing:</b> confirm the Magnus rent surcharge and HSBC accelerated cap on a live statement.</li>
+    </ul>
+    <div class="callout" style="margin-top:20px">
+      <h3>The Burgundy flip 🔑</h3>
+      <p>The moment you reach <b>Axis Burgundy</b>, Magnus transfers at <b>5:4</b> instead of 5:2. Base earning jumps to <b>4.8 partner miles/₹100</b> — beating Atlas even <em>below</em> the ₹1.5L threshold — and that ₹3L month throws off ~28,200 miles. Burgundy turns Magnus from a big-month specialist into your default Axis card. It's the single highest-leverage move in your whole plan.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Built as a living reference · rates &amp; partners reflect mid-2026 rules and change without notice · re-verify before large transfers or milestone pushes · not financial advice.
+  </div>
+</footer>
+
+<script>
+(function(){
+  var NAME={atlas:'Axis Atlas',magnus:'Axis Magnus',amex:'Amex Plat Travel',hsbc:'HSBC TravelOne',hdfc:'HDFC Marriott'};
+  var CUR={atlas:'EDGE Miles',magnus:'EDGE Reward Pts',amex:'Membership Rwds',hsbc:'Reward Points',hdfc:'Bonvoy Points'};
+  var HSBC_CAP=18000; // accelerated pts / month
+  function fmt(n){return Math.round(n).toLocaleString('en-IN');}
+  function rupee(n){return '₹'+Math.round(n).toLocaleString('en-IN');}
+  var TRAVEL=function(c){return c==='travel_flights'||c==='travel_hotels';};
+
+  // ---- per-card native points ----
+  function atlas(cat,spend){ // 5/100 on all travel, 2/100 general, else 0
+    var r=(cat==='shopping'||cat==='groceries'||cat==='dining')?2:(TRAVEL(cat)?5:0);
+    return {native:spend/100*r,rate:r};
+  }
+  function amex(cat,spend){ // flat 2/100 (1 MR/₹50), no travel bonus; not accepted for rent
+    if(cat==='rent') return {na:true};
+    var r=(cat==='fuel'||cat==='utilities')?0:2;
+    return {native:spend/100*r,rate:r};
+  }
+  function hsbc(cat,spend,portal){ // portal (Hopper OTA): 16/100 flights, 24/100 hotels = 4 base + accelerated bonus (18k/mo cap)
+    if(cat==='fuel'||cat==='utilities'||cat==='rent') return {native:0,rate:0};
+    if(TRAVEL(cat)){
+      if(portal){
+        var base=spend/100*4;                              // portal = OTA -> 4/100 base, uncapped
+        var bonusRate=(cat==='travel_hotels')?20:12;       // +20 -> 24/100 hotels; +12 -> 16/100 flights
+        var accel=spend/100*bonusRate, capped=false;
+        if(accel>HSBC_CAP){ accel=HSBC_CAP; capped=true; } // accelerated bonus capped at 18k/mo
+        return {native:base+accel,rate:(cat==='travel_hotels')?24:16,capped:capped};
+      }
+      return {native:spend/100*(cat==='travel_flights'?4:2),rate:(cat==='travel_flights'?4:2)}; // direct: flights/OTA 4, hotel 2
+    }
+    return {native:spend/100*2,rate:2}; // shopping / groceries / dining
+  }
+  function hdfc(cat,spend){ // 3/150 general, 4/150 dining+travel (Marriott property 8/150, noted)
+    var r=(cat==='shopping'||cat==='groceries')?3/1.5:(cat==='dining'||TRAVEL(cat))?4/1.5:0;
+    return {native:spend/100*r,rate:r};
+  }
+  function magnus(cat,spend,accelYes,portal,burg){ // 12/200 base, 35/200 accel; portal travel 60/200; rent cap 50k
+    if(cat==='fuel'||cat==='utilities') return {rp:0};
+    var ratio=burg?0.8:0.4, elig=(cat==='rent')?Math.min(spend,50000):spend, rp;
+    if(portal&&TRAVEL(cat)){ var pb=Math.min(elig,200000); rp=pb/200*60+(elig-pb)/200*35; }
+    else{ var ctx=accelYes?150000:0, room=Math.max(0,150000-ctx),
+           base=Math.min(elig,room), accel=elig-base; rp=base/200*12+accel/200*35; }
+    return {rp:rp,partner:rp*ratio,ratio:burg?'5:4':'5:2'};
+  }
+
+  function calc(){
+    var spend=Math.max(0,+document.getElementById('amt').value||0);
+    var cat=document.getElementById('cat').value;
+    var vair=+document.getElementById('vair').value||0;
+    var vhot=+document.getElementById('vhot').value||0;
+    var vacc=+document.getElementById('vacc').value||0;
+    var hsbcexit=document.getElementById('hsbcexit').value;
+    var burg=document.getElementById('burg').checked;
+    var portal=document.getElementById('portal').checked;
+    var accelYes=document.getElementById('magaccel').checked;
+    var rows=[];
+
+    (function(){var a=atlas(cat,spend);var p=a.native*2;rows.push({id:'atlas',native:a.native,partner:p,plabel:'airline miles (1:2)',val:p*vair,dead:a.rate===0});})();
+    (function(){var m=magnus(cat,spend,accelYes,portal,burg);rows.push({id:'magnus',native:m.rp,partner:m.partner||0,plabel:'airline miles ('+(m.ratio||'5:2')+')',val:(m.partner||0)*vair,dead:(m.rp||0)===0});})();
+    (function(){var a=amex(cat,spend);if(a.na){rows.push({id:'amex',na:true});return;}var air=a.native*0.5*vair,hot=a.native*1*vhot,best=Math.max(air,hot);var pl=hot>=air?fmt(a.native)+' Bonvoy (1:1)':fmt(a.native*0.5)+' miles (2:1)';rows.push({id:'amex',native:a.native,partnerText:pl,val:best,dead:a.rate===0});})();
+    (function(){var h=hsbc(cat,spend,portal);var pl,val;
+      if(hsbcexit==='accor'){val=h.native*vacc;pl='Accor (1:1)';}
+      else if(hsbcexit==='marriott'){val=h.native*vhot;pl='Marriott (1:1)';}
+      else if(hsbcexit==='airline'){val=h.native*vair;pl='Flying Blue (1:1)';}
+      else{var air=h.native*vair,mar=h.native*vhot,acc=h.native*vacc;val=Math.max(air,mar,acc);pl=(val===acc)?'Accor (1:1)':(val===mar)?'Marriott (1:1)':'Flying Blue (1:1)';}
+      rows.push({id:'hsbc',native:h.native,partner:h.native,plabel:pl,val:val,dead:h.rate===0,capped:h.capped});})();
+    (function(){var d=hdfc(cat,spend);rows.push({id:'hdfc',native:d.native,partner:d.native,plabel:'Bonvoy points',val:d.native*vhot,dead:d.rate===0});})();
+
+    var best=-1,bestId=null;
+    rows.forEach(function(x){if(!x.na&&!x.dead&&x.val>best){best=x.val;bestId=x.id;}});
+
+    var html='';
+    rows.forEach(function(x){
+      var cls='pass';if(x.id===bestId&&best>0)cls+=' win';if(x.na||x.dead)cls+=' dead';
+      var stamp=(x.id===bestId&&best>0)?'<span class="stamp">BEST VALUE</span>':'';
+      var inner;
+      if(x.na){ inner='<div class="body"><div class="part">Not accepted (Amex declined on rent platforms / wallet loads).</div><div class="val"><div class="big">—</div><div class="lab">no rewards</div></div></div>'; }
+      else if(x.dead){ inner='<div class="body"><div class="rowk"><span class="lab">Earns</span><span class="num">0</span></div><div class="part">Excluded category — no points on this card.</div><div class="val"><div class="big">₹0</div><div class="lab">est. value</div></div></div>'; }
+      else{
+        var pline=x.partnerText?x.partnerText:(fmt(x.partner)+' '+x.plabel);
+        var cap=x.capped?'<div class="part" style="color:var(--burgundy)">accel. capped at 18k/mo — excess at base rate</div>':'';
+        inner='<div class="body"><div class="rowk"><span class="lab">Earns</span><span class="num">'+fmt(x.native)+'</span></div><div class="part">&rarr; <b>'+pline+'</b></div>'+cap+'<div class="val"><div class="big">'+rupee(x.val)+'</div><div class="lab">est. value</div></div></div>';
+      }
+      html+='<div class="'+cls+'">'+stamp+'<div class="top"><div class="name">'+NAME[x.id]+'</div><div class="cur">'+CUR[x.id]+'</div></div>'+inner+'</div>';
+    });
+    document.getElementById('results').innerHTML=html;
+
+    var note='';
+    if(spend<=0){ note='Enter an amount to compare all five cards.'; }
+    else if(cat==='fuel'||cat==='utilities'){ note='<b>Zero-reward category.</b> No card earns here — pick whichever gives a surcharge waiver. See &sect;7 for the fuel fix.'; }
+    else if(cat==='rent'){ note='<b>Rent:</b> only Magnus earns (first &#8377;50k), counting toward its &#8377;1.5L threshold. Worth it only if you value a mile above ~&#8377;0.59 after the ~1% surcharge.'; }
+    else if(cat==='travel_hotels'&&!portal){ note='<b>Direct hotel stay.</b> On the hotel\'s own site HSBC earns just 2/&#8377;100 — its big rate (24/&#8377;100) fires only inside the Travel with Points portal, so tick <em>Booked via bank portal</em>. HDFC earns 8/&#8377;150 at Marriott properties (shown here at 4/&#8377;150). Amex is flat 2/&#8377;100.'; }
+    else if(cat==='travel_hotels'&&portal){ note='<b>Portal hotel — the headline play.</b> HSBC earns <b>24 pts/&#8377;100</b> (4 base + 20 accelerated, capped 18k/mo &#8776; &#8377;90k hotel spend). At the default Accor value (~&#8377;1.80/pt, 1:1) that\'s the strongest hotel-earn in India. Magnus does 60 pts/&#8377;200 via Axis Travel EDGE; Amex stays flat 2/&#8377;100.'; }
+    else if(cat==='travel_flights'&&portal){ note='<b>Portal flight.</b> HSBC earns <b>16 pts/&#8377;100</b> (4 base + 12 accelerated, capped 18k/mo &#8776; &#8377;1.5L flight spend). Magnus does 60 pts/&#8377;200 via Axis Travel EDGE; Amex stays flat 2/&#8377;100.'; }
+    else if(cat==='travel_flights'){ note='<b>Flights / aggregators / forex (direct).</b> Atlas 5/&#8377;100 and HSBC 4/&#8377;100 lead. Book the same flight through the HSBC portal and HSBC jumps to 16/&#8377;100 — tick the portal box. Amex is flat 2/&#8377;100.'; }
+    else if(bestId==='magnus'){ note='<b>Magnus wins</b> — the &#8377;1.5L accelerated rate is in play. Stack rent + big spend in one cycle to widen the lead.'; }
+    else if(bestId==='atlas'){ note='<b>Atlas wins.</b> Magnus overtakes only once a single month\'s eligible spend on the card clears ~&#8377;2.3L (or with the &#8377;1.5L switch on).'; }
+    else if(bestId==='amex'){ note='<b>Amex wins on value here</b> — and every rupee also drives the &#8377;4L/&#8377;7L milestones, which this calculator doesn\'t count.'; }
+    else if(bestId==='hsbc'){ note='<b>HSBC wins</b> — its 1:1 Accor route (default ~&#8377;1.80/pt) is the strongest exit here. Adjust the Accor value if you redeem differently.'; }
+    document.getElementById('note').innerHTML=note;
+  }
+
+  ['amt','cat','vair','vhot','vacc','hsbcexit','burg','portal','magaccel'].forEach(function(id){
+    var el=document.getElementById(id);el.addEventListener('input',calc);el.addEventListener('change',calc);
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
